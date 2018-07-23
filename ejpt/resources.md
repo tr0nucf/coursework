@@ -6,3 +6,7 @@ Backdoor sockets info:
 https://docs.python.org/3/library/socket.html  
 https://docs.python.org/3.3/library/os.html  
 https://docs.python.org/3/library/platform.html  
+How to run system commands:
+https://stackoverflow.com/questions/89228/calling-an-external-command-in-python  
+Keep socket open after disconnect:
+https://stackoverflow.com/questions/5110911/python-sockets-keep-socket-alive  
